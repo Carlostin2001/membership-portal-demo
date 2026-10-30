@@ -212,9 +212,7 @@ footer{
 }
 .hidden{display:none!important}
 
-.orders{
-  margin-top:25px;
-}
+.orders{margin-top:25px}
 .orders h3{font-size:16px;margin-bottom:15px}
 .order-item{
   display:flex;
@@ -243,6 +241,45 @@ footer{
 }
 .empty-orders{color:var(--muted);font-size:13px;line-height:1.8}
 .loading{color:var(--muted);font-size:13px}
+
+/* VPN ACCOUNT */
+.vpn-account{
+  margin-top:28px;
+  padding:22px;
+  border:1px solid rgba(101,224,223,.2);
+  border-radius:12px;
+  background:rgba(101,224,223,.035);
+}
+.vpn-account h3{
+  margin:0 0 18px;
+  font-size:17px;
+}
+.vpn-row{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+  font-size:13px;
+}
+.vpn-label{color:var(--muted)}
+.vpn-value{color:var(--text);text-align:right}
+.vpn-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+.vpn-actions .btn{flex:1}
+.vpn-message{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.8;
+  margin-top:14px;
+}
+.vpn-enabled{color:var(--cyan)}
+.vpn-disabled{color:var(--danger)}
+
 @media(max-width:720px){
   nav{padding:0 20px}
   main{padding:55px 18px 70px}
@@ -349,6 +386,39 @@ footer{
         </button>
       </div>
 
+      <!-- VPN ACCOUNT -->
+      <div class="vpn-account">
+        <h3>VPN Account</h3>
+
+        <div class="vpn-row">
+          <span class="vpn-label">VPN Status</span>
+          <span class="vpn-value" id="vpnStatus">Not checked</span>
+        </div>
+
+        <div class="vpn-row">
+          <span class="vpn-label">Membership Expiry</span>
+          <span class="vpn-value" id="vpnExpiry">—</span>
+        </div>
+
+        <div class="vpn-row">
+          <span class="vpn-label">Protocol</span>
+          <span class="vpn-value">VLESS / WebSocket</span>
+        </div>
+
+        <div class="vpn-actions hidden" id="vpnActions">
+          <button class="btn btn-primary" onclick="copyVpnSubscription()">
+            Copy Subscription URL
+          </button>
+          <button class="btn" onclick="openVpnSubscription()">
+            Open Subscription
+          </button>
+        </div>
+
+        <div class="vpn-message" id="vpnMessage">
+          Sign in to check your VPN membership.
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -429,12 +499,15 @@ footer{
 // =====================================
 
 const API_BASE = "https://membership-api-demo.carlo202509.workers.dev";
-
 const TOKEN_KEY = "portal_token";
+
+// 测试项目域名
+const VPN_TEST_BASE = "https://edgetunnel-membership-test.pages.dev";
 
 let currentMode = "login";
 let currentUser = null;
 let isCreatingOrder = false;
+let vpnSubscriptionUrl = "";
 
 // =====================================
 // TOKEN MANAGEMENT
@@ -567,10 +640,7 @@ async function submitAuth(event) {
 
     const data = await apiRequest(endpoint, {
       method: "POST",
-      body: JSON.stringify({
-        email,
-        password
-      })
+      body: JSON.stringify({ email, password })
     });
 
     if (!data.token) {
@@ -578,16 +648,16 @@ async function submitAuth(event) {
     }
 
     sessionStorage.setItem(TOKEN_KEY, data.token);
-
     currentUser = data.user || { email };
 
     updateAccountUI();
-
     closeModal();
-
     document.getElementById("authForm").reset();
 
-    await loadOrders();
+    await Promise.all([
+      loadOrders(),
+      loadVpnAccount()
+    ]);
 
     alert(
       currentMode === "register"
@@ -602,11 +672,8 @@ async function submitAuth(event) {
   } finally {
 
     button.disabled = false;
-
     button.textContent =
-      currentMode === "login"
-        ? "Sign In"
-        : "Create Account";
+      currentMode === "login" ? "Sign In" : "Create Account";
   }
 }
 
@@ -629,13 +696,11 @@ function updateAccountUI() {
   document.getElementById("userContent").classList.toggle("hidden", !signedIn);
 
   if (signedIn) {
-
     document.getElementById("userEmail").textContent =
       "Signed in as: " + (currentUser.email || "User");
-
   } else {
-
     document.getElementById("ordersList").innerHTML = "";
+    resetVpnUI();
   }
 }
 
@@ -648,10 +713,8 @@ async function checkSession() {
   const token = getToken();
 
   if (!token) {
-
     currentUser = null;
     updateAccountUI();
-
     return;
   }
 
@@ -662,19 +725,18 @@ async function checkSession() {
     });
 
     currentUser = data.user || data;
-
     updateAccountUI();
 
-    await loadOrders();
+    await Promise.all([
+      loadOrders(),
+      loadVpnAccount()
+    ]);
 
   } catch (error) {
 
     clearToken();
-
     currentUser = null;
-
     updateAccountUI();
-
   }
 }
 
@@ -699,8 +761,8 @@ async function logout() {
   } finally {
 
     clearToken();
-
     currentUser = null;
+    vpnSubscriptionUrl = "";
 
     updateAccountUI();
   }
@@ -734,11 +796,8 @@ async function loadPlans() {
 async function choosePlan(planId) {
 
   if (!currentUser) {
-
     openModal("login");
-
     setMessage("Please sign in before selecting a membership plan.");
-
     return;
   }
 
@@ -764,9 +823,7 @@ async function choosePlan(planId) {
 
     const data = await apiRequest("/api/orders", {
       method: "POST",
-      body: JSON.stringify({
-        plan_id: planId
-      })
+      body: JSON.stringify({ plan_id: planId })
     });
 
     const order = data.order;
@@ -793,9 +850,10 @@ async function choosePlan(planId) {
 
     isCreatingOrder = false;
 
-    buttons.forEach(button => {
+    buttons.forEach((button, index) => {
       button.disabled = false;
-      button.textContent = "Select Plan";
+      button.textContent =
+        ["Select Plan", "Select Plan", "Select Plan"][index] || "Select Plan";
     });
   }
 }
@@ -809,9 +867,7 @@ async function loadOrders() {
   if (!currentUser) return;
 
   const container = document.getElementById("ordersList");
-
-  container.innerHTML =
-    '<div class="loading">Loading orders...</div>';
+  container.innerHTML = '<div class="loading">Loading orders...</div>';
 
   try {
 
@@ -822,10 +878,8 @@ async function loadOrders() {
     const orders = data.orders || [];
 
     if (!orders.length) {
-
       container.innerHTML =
         '<div class="empty-orders">No orders yet. Choose a membership plan to create your first order.</div>';
-
       return;
     }
 
@@ -834,7 +888,6 @@ async function loadOrders() {
     orders.forEach(order => {
 
       const item = document.createElement("div");
-
       item.className = "order-item";
 
       const left = document.createElement("div");
@@ -853,30 +906,136 @@ async function loadOrders() {
         "\nCreated: " + (order.created_at || "—");
 
       const right = document.createElement("span");
-
       right.className =
-        "order-status" +
-        (order.status === "paid" ? " paid" : "");
-
+        "order-status" + (order.status === "paid" ? " paid" : "");
       right.textContent = order.status || "pending";
 
       left.appendChild(name);
       left.appendChild(meta);
-
       item.appendChild(left);
       item.appendChild(right);
-
       container.appendChild(item);
     });
 
   } catch (error) {
 
-    container.innerHTML =
-      '<div class="empty-orders">Could not load orders: ' +
-      escapeHTML(error.message) +
-      '</div>';
-
+    container.textContent = "Could not load orders: " + error.message;
   }
+}
+
+// =====================================
+// VPN ACCOUNT
+// =====================================
+
+function resetVpnUI() {
+
+  vpnSubscriptionUrl = "";
+
+  const statusEl = document.getElementById("vpnStatus");
+  const expiryEl = document.getElementById("vpnExpiry");
+  const messageEl = document.getElementById("vpnMessage");
+  const actionsEl = document.getElementById("vpnActions");
+
+  if (!statusEl) return;
+
+  statusEl.textContent = "Not checked";
+  statusEl.className = "vpn-value";
+  expiryEl.textContent = "—";
+  actionsEl.classList.add("hidden");
+  messageEl.textContent = "Sign in to check your VPN membership.";
+}
+
+async function loadVpnAccount() {
+
+  if (!currentUser || !getToken()) return;
+
+  const statusEl = document.getElementById("vpnStatus");
+  const expiryEl = document.getElementById("vpnExpiry");
+  const messageEl = document.getElementById("vpnMessage");
+  const actionsEl = document.getElementById("vpnActions");
+
+  statusEl.textContent = "Checking...";
+  statusEl.className = "vpn-value";
+  expiryEl.textContent = "—";
+  actionsEl.classList.add("hidden");
+  vpnSubscriptionUrl = "";
+
+  try {
+
+    const data = await apiRequest("/api/vpn/account", {
+      method: "GET"
+    });
+
+    if (!data.vpn_enabled || !data.subscription_token) {
+
+      statusEl.textContent = "Not Active";
+      statusEl.className = "vpn-value vpn-disabled";
+
+      messageEl.textContent =
+        "An active membership is required to access VPN services.";
+
+      return;
+    }
+
+    if (!data.expires_at) {
+      throw new Error("Membership expiry information is missing.");
+    }
+
+    statusEl.textContent = "Active";
+    statusEl.className = "vpn-value vpn-enabled";
+
+    expiryEl.textContent =
+      new Date(data.expires_at).toLocaleString();
+
+    // 暂定测试订阅地址。
+    // 需要确认 EdgeTunnel 实际 /sub 路由采用的参数名称后才能用于连接。
+    const subscriptionToken = encodeURIComponent(
+      data.subscription_token
+    );
+
+    vpnSubscriptionUrl =
+      VPN_TEST_BASE + "/sub?token=" + subscriptionToken;
+
+    actionsEl.classList.remove("hidden");
+
+    messageEl.textContent =
+      "Your individual subscription URL is available. " +
+      "Keep it private and do not share it.";
+
+  } catch (error) {
+
+    statusEl.textContent = "Unavailable";
+    statusEl.className = "vpn-value vpn-disabled";
+
+    messageEl.textContent =
+      "Could not load VPN account: " + error.message;
+  }
+}
+
+async function copyVpnSubscription() {
+
+  if (!vpnSubscriptionUrl) return;
+
+  try {
+
+    await navigator.clipboard.writeText(vpnSubscriptionUrl);
+    alert("Subscription URL copied.");
+
+  } catch (error) {
+
+    alert("Copy failed. Please check browser permissions.");
+  }
+}
+
+function openVpnSubscription() {
+
+  if (!vpnSubscriptionUrl) return;
+
+  window.open(
+    vpnSubscriptionUrl,
+    "_blank",
+    "noopener,noreferrer"
+  );
 }
 
 // =====================================
@@ -909,7 +1068,6 @@ document
     if (event.target === this) {
       closeModal();
     }
-
   });
 
 // =====================================
