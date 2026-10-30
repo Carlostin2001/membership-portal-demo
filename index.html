@@ -1,0 +1,468 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090d18">
+<title>会员中心 · Digital Portal</title>
+<style>
+:root {
+  --bg:#090d18;
+  --panel:#111a2b;
+  --panel2:#172238;
+  --blue:#5795ff;
+  --text:#f3f6ff;
+  --muted:#8795ad;
+  --border:rgba(255,255,255,.09);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+header{
+  height:76px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 max(calc((100% - 1120px)/2),24px);
+  position:sticky;top:0;background:rgba(9,13,24,.94);
+  backdrop-filter:blur(15px);z-index:10;
+}
+.logo{font-size:21px;font-weight:750;letter-spacing:1px}
+.logo span{color:var(--blue)}
+nav{display:flex;align-items:center;gap:26px}
+nav a{color:var(--muted);text-decoration:none;font-size:14px}
+nav a:hover{color:white}
+.btn{
+  border:0;border-radius:9px;padding:12px 19px;
+  background:var(--blue);color:white;font-weight:650;
+}
+.btn:hover{filter:brightness(1.13)}
+.btn.secondary{background:var(--panel2);border:1px solid var(--border)}
+main{max-width:1120px;margin:auto;padding:0 24px}
+.hero{text-align:center;padding:100px 0 65px}
+.eyebrow{
+  color:#82b1ff;font-size:12px;letter-spacing:3px;
+  text-transform:uppercase
+}
+.hero h1{
+  font-size:clamp(38px,7vw,68px);line-height:1.12;
+  margin:22px 0 18px;letter-spacing:-2px
+}
+.hero h1 span{
+  background:linear-gradient(90deg,#6ba5ff,#a5c8ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent
+}
+.hero p{color:var(--muted);font-size:16px;line-height:1.8}
+.hero .btn{margin-top:24px;padding:14px 30px}
+.section{padding:55px 0}
+.section-title{text-align:center;margin-bottom:38px}
+.section-title h2{font-size:30px;margin:0 0 12px}
+.section-title p{color:var(--muted);font-size:14px}
+.plans{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px
+}
+.plan{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:17px;padding:28px;position:relative;
+  transition:.2s;
+}
+.plan:hover{transform:translateY(-5px);border-color:#5795ff88}
+.plan.featured{border-color:var(--blue);background:#14223a}
+.tag{
+  position:absolute;right:18px;top:18px;
+  background:#254b80;color:#b9d7ff;
+  padding:5px 10px;border-radius:20px;font-size:11px
+}
+.plan h3{font-size:19px;margin:0 0 12px}
+.duration{font-size:13px;color:var(--muted)}
+.price{font-size:29px;font-weight:750;margin:22px 0 6px}
+.price small{font-size:13px;color:var(--muted);font-weight:400}
+.plan ul{list-style:none;padding:15px 0;margin:0 0 20px}
+.plan li{padding:9px 0;color:#b5c1d5;font-size:13px}
+.plan li:before{content:"✓";color:#68a4ff;margin-right:10px}
+.plan .btn{width:100%}
+.notice{
+  margin-top:28px;text-align:center;color:var(--muted);
+  font-size:12px;line-height:1.8
+}
+.features{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px
+}
+.feature{
+  background:var(--panel);border:1px solid var(--border);
+  padding:23px;border-radius:13px
+}
+.feature .icon{font-size:23px}
+.feature h3{font-size:16px}
+.feature p{font-size:13px;color:var(--muted);line-height:1.8}
+#account{display:none}
+.account-box{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:28px;margin-bottom:24px
+}
+.account-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px
+}
+.stat{background:var(--panel2);padding:18px;border-radius:10px}
+.stat small{color:var(--muted)}
+.stat h3{margin:10px 0 0;font-size:17px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{text-align:left;padding:14px 10px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:500}
+footer{
+  border-top:1px solid var(--border);text-align:center;
+  padding:35px 20px;color:var(--muted);font-size:12px;
+  margin-top:65px;line-height:2
+}
+.modal{
+  display:none;position:fixed;inset:0;z-index:30;
+  background:#000b;align-items:center;justify-content:center;padding:20px
+}
+.modal.show{display:flex}
+.modal-box{
+  background:#121d30;border:1px solid var(--border);
+  border-radius:16px;padding:30px;width:100%;max-width:410px;
+  position:relative
+}
+.modal-box h2{margin-top:0}
+.modal-box input{
+  width:100%;padding:14px;margin:8px 0;
+  border-radius:8px;background:#091221;color:white;
+  border:1px solid var(--border);outline:none
+}
+.modal-box input:focus{border-color:var(--blue)}
+.modal-box .btn{width:100%;margin-top:12px}
+.close{
+  position:absolute;right:18px;top:16px;
+  background:none;border:0;color:var(--muted);font-size:23px
+}
+.switch{color:#7eafff;cursor:pointer;font-size:13px}
+#message{font-size:13px;color:#ff9b9b;min-height:20px}
+@media(max-width:760px){
+  header{padding:0 18px;height:65px}
+  nav{gap:12px}
+  nav a{display:none}
+  main{padding:0 17px}
+  .hero{padding:75px 0 45px}
+  .plans,.features{grid-template-columns:1fr}
+  .account-grid{grid-template-columns:1fr}
+  .plan{padding:24px}
+  .section{padding:38px 0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">DIGITAL<span>PORTAL</span></div>
+  <nav>
+    <a href="#plans">会员套餐</a>
+    <a href="#features">服务介绍</a>
+    <button class="btn secondary" id="navButton" onclick="openAuth()">
+      登录 / 注册
+    </button>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="eyebrow">YOUR DIGITAL MEMBERSHIP</div>
+    <h1>Experience<br><span>A Better Connection.</span></h1>
+    <p>
+      简洁、直观的数字会员管理体验。<br>
+      选择适合自己的会员计划，管理你的账户。
+    </p>
+    <button class="btn" onclick="document.querySelector('#plans').scrollIntoView({behavior:'smooth'})">
+      探索会员套餐 →
+    </button>
+  </section>
+
+  <section class="section" id="plans">
+    <div class="section-title">
+      <h2>选择会员计划</h2>
+      <p>灵活的会员周期，满足不同使用需求</p>
+    </div>
+
+    <div class="plans">
+      <div class="plan">
+        <h3>Monthly</h3>
+        <div class="duration">月度会员 · 30天</div>
+        <div class="price">待定 <small>/ 30天</small></div>
+        <ul>
+          <li>30天会员期限</li>
+          <li>独立会员账户</li>
+          <li>会员状态查询</li>
+          <li>在线订单记录</li>
+        </ul>
+        <button class="btn secondary" onclick="buy('monthly')">模拟购买</button>
+      </div>
+
+      <div class="plan featured">
+        <div class="tag">POPULAR</div>
+        <h3>Quarterly</h3>
+        <div class="duration">季度会员 · 90天</div>
+        <div class="price">待定 <small>/ 90天</small></div>
+        <ul>
+          <li>90天会员期限</li>
+          <li>独立会员账户</li>
+          <li>会员状态查询</li>
+          <li>在线订单记录</li>
+        </ul>
+        <button class="btn" onclick="buy('quarterly')">模拟购买</button>
+      </div>
+
+      <div class="plan">
+        <h3>Yearly</h3>
+        <div class="duration">年度会员 · 365天</div>
+        <div class="price">待定 <small>/ 365天</small></div>
+        <ul>
+          <li>365天会员期限</li>
+          <li>独立会员账户</li>
+          <li>会员状态查询</li>
+          <li>在线订单记录</li>
+        </ul>
+        <button class="btn secondary" onclick="buy('yearly')">模拟购买</button>
+      </div>
+    </div>
+    <div class="notice">
+      当前为功能演示版本。套餐价格尚未设置，模拟购买不产生真实付款。
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section-title">
+      <h2>会员服务</h2>
+      <p>清晰管理每一项会员信息</p>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <div class="icon">◈</div>
+        <h3>账户管理</h3>
+        <p>管理个人账户信息，查看自己的会员资料。</p>
+      </div>
+      <div class="feature">
+        <div class="icon">◷</div>
+        <h3>期限管理</h3>
+        <p>查看会员开始时间、到期时间及当前状态。</p>
+      </div>
+      <div class="feature">
+        <div class="icon">▤</div>
+        <h3>订单记录</h3>
+        <p>查看历史模拟订单和购买套餐记录。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="account">
+    <div class="section-title">
+      <h2>会员中心</h2>
+      <p>MEMBER DASHBOARD</p>
+    </div>
+    <div class="account-box">
+      <p>当前账户</p>
+      <h3 id="userEmail">--</h3>
+      <div class="account-grid">
+        <div class="stat">
+          <small>会员等级</small>
+          <h3 id="memberPlan">普通账户</h3>
+        </div>
+        <div class="stat">
+          <small>会员状态</small>
+          <h3 id="memberStatus">未开通</h3>
+        </div>
+        <div class="stat">
+          <small>到期时间</small>
+          <h3 id="memberExpiry">--</h3>
+        </div>
+      </div>
+      <br>
+      <button class="btn secondary" onclick="logout()">退出登录</button>
+    </div>
+
+    <div class="account-box">
+      <h3>订单记录</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>订单编号</th>
+            <th>套餐</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody id="orders">
+          <tr><td colspan="3">暂无订单</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="logo">DIGITAL<span>PORTAL</span></div>
+  <p>Digital Membership Portal · Demo Version</p>
+  <p>本网站仅用于会员管理界面及模拟订单功能演示，不提供实际网络代理服务。</p>
+  <p>© 2026 Digital Portal. All rights reserved.</p>
+</footer>
+
+<div class="modal" id="authModal">
+  <div class="modal-box">
+    <button class="close" onclick="closeAuth()">×</button>
+    <h2 id="modalTitle">创建账户</h2>
+    <p style="color:#8795ad;font-size:13px">
+      会员账户功能演示
+    </p>
+    <input id="email" type="email" placeholder="电子邮箱">
+    <input id="password" type="password" placeholder="演示密码（至少6位）">
+    <div id="message"></div>
+    <button class="btn" onclick="submitAuth()">注册账户</button>
+    <p style="font-size:13px;color:#8795ad">
+      <span id="switchText">已有账户？</span>
+      <span class="switch" onclick="switchAuth()" id="switchLink">立即登录</span>
+    </p>
+    <p style="font-size:11px;color:#687993;line-height:1.7">
+      演示版本不保存密码。请勿使用真实密码或敏感信息。
+    </p>
+  </div>
+</div>
+
+<script>
+const plans = {
+  monthly:{name:"月度会员",days:30},
+  quarterly:{name:"季度会员",days:90},
+  yearly:{name:"年度会员",days:365}
+};
+
+let authMode = "register";
+let pendingPlan = null;
+let currentUser = sessionStorage.getItem("demoUser");
+
+function getUsers(){
+  return JSON.parse(localStorage.getItem("demoUsers") || "{}");
+}
+function saveUsers(users){
+  localStorage.setItem("demoUsers",JSON.stringify(users));
+}
+function getData(email){
+  return getUsers()[email] || {membership:null,orders:[]};
+}
+function updateData(email,data){
+  const users=getUsers();
+  users[email]=data;
+  saveUsers(users);
+}
+function openAuth(){
+  document.getElementById("authModal").classList.add("show");
+  document.getElementById("message").textContent="";
+}
+function closeAuth(){
+  document.getElementById("authModal").classList.remove("show");
+}
+function switchAuth(){
+  authMode=authMode==="register"?"login":"register";
+  document.getElementById("modalTitle").textContent=
+    authMode==="register"?"创建账户":"欢迎回来";
+  document.querySelector("#authModal .btn").textContent=
+    authMode==="register"?"注册账户":"登录账户";
+  document.getElementById("switchText").textContent=
+    authMode==="register"?"已有账户？":"还没有账户？";
+  document.getElementById("switchLink").textContent=
+    authMode==="register"?"立即登录":"立即注册";
+  document.getElementById("message").textContent="";
+}
+function submitAuth(){
+  const email=document.getElementById("email").value.trim().toLowerCase();
+  const password=document.getElementById("password").value;
+  const message=document.getElementById("message");
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    message.textContent="请输入有效的邮箱地址";return;
+  }
+  if(password.length<6){
+    message.textContent="演示密码至少需要6位";return;
+  }
+  const users=getUsers();
+  if(authMode==="register"){
+    if(users[email]){
+      message.textContent="该邮箱已注册，请直接登录";return;
+    }
+    users[email]={membership:null,orders:[]};
+    saveUsers(users);
+  }else if(!users[email]){
+    message.textContent="该演示账户不存在，请先注册";return;
+  }
+  currentUser=email;
+  sessionStorage.setItem("demoUser",email);
+  closeAuth();
+  document.getElementById("password").value="";
+  refresh();
+  if(pendingPlan){
+    const plan=pendingPlan;
+    pendingPlan=null;
+    buy(plan);
+  }
+}
+function logout(){
+  sessionStorage.removeItem("demoUser");
+  currentUser=null;
+  refresh();
+}
+function buy(key){
+  if(!currentUser){
+    pendingPlan=key;
+    authMode="register";
+    openAuth();
+    return;
+  }
+  const plan=plans[key];
+  const data=getData(currentUser);
+  const now=Date.now();
+  const oldExpiry=data.membership?.expiry || 0;
+  const start=Math.max(now,oldExpiry);
+  const expiry=start+plan.days*86400000;
+  const id="DEMO-"+Date.now().toString().slice(-9);
+  data.membership={
+    plan:key,
+    name:plan.name,
+    expiry:expiry,
+    status:"active"
+  };
+  data.orders.unshift({
+    id:id,
+    name:plan.name,
+    status:"模拟成功",
+    date:new Date().toLocaleDateString("zh-CN")
+  });
+  updateData(currentUser,data);
+  alert("模拟购买成功！\n套餐："+plan.name+"\n注意：这不是实际付款。");
+  refresh();
+  document.getElementById("account").scrollIntoView({behavior:"smooth"});
+}
+function refresh(){
+  const logged=!!currentUser && !!getUsers()[currentUser];
+  document.getElementById("navButton").textContent=
+    logged?"会员中心":"登录 / 注册";
+  document.getElementById("navButton").onclick=()=>{
+    if(logged) document.getElementById("account").scrollIntoView({behavior:"smooth"});
+    else openAuth();
+  };
+  document.getElementById("account").style.display=logged?"block":"none";
+  if(!logged)return;
+  const data=getData(currentUser);
+  const member=data.membership;
+  const active=member && member.expiry>Date.now();
+  document.getElementById("userEmail").textContent=currentUser;
+  document.getElementById("memberPlan").textContent=active?member.name:"普通账户";
+  document.getElementById("memberStatus").textContent=active?"有效":"未开通 / 已到期";
+  document.getElementById("memberExpiry").textContent=
+    active?new Date(member.expiry).toLocaleDateString("zh-CN"):"--";
+  document.getElementById("orders").innerHTML=
+    data.orders.length?data.orders.map(o=>
+      `<tr><td>${o.id}</td><td>${o.name}</td><td>${o.status}</td></tr>`
+    ).join(""):'<tr><td colspan="3">暂无订单</td></tr>';
+}
+refresh();
+</script>
+</body>
+</html>
