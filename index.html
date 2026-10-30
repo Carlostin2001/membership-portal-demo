@@ -4,7 +4,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b12">
 <title>DIGITAL PORTAL — Membership</title>
+
 <style>
 :root {
   --bg:#080b12;
@@ -15,10 +17,12 @@
   --line:rgba(255,255,255,.09);
   --blue:#6c9cff;
   --cyan:#65e0df;
+  --danger:#ff8585;
 }
 *{box-sizing:border-box}
 body{
-  margin:0;background:
+  margin:0;
+  background:
   radial-gradient(ellipse at 50% -20%,rgba(63,107,190,.22),transparent 55%),
   var(--bg);
   color:var(--text);
@@ -27,45 +31,65 @@ body{
 }
 button,input{font:inherit}
 button{cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
 nav{
-  height:76px;padding:0 7%;display:flex;align-items:center;
-  justify-content:space-between;border-bottom:1px solid var(--line);
+  min-height:76px;
+  padding:0 7%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
 }
 .logo{font-size:17px;font-weight:800;letter-spacing:3px}
 .logo span{color:var(--blue)}
 .nav-right{display:flex;align-items:center;gap:20px}
 .nav-status{font-size:12px;color:var(--muted)}
 .btn{
-  border:1px solid var(--line);border-radius:8px;
-  padding:11px 18px;background:transparent;color:var(--text);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:11px 18px;
+  background:transparent;
+  color:var(--text);
   transition:.2s;
 }
 .btn:hover{border-color:var(--blue);color:var(--blue)}
 .btn-primary{
   background:linear-gradient(110deg,#6c9cff,#69c8df);
-  color:#07101d;border:0;font-weight:700;
+  color:#07101d;
+  border:0;
+  font-weight:700;
 }
 .btn-primary:hover{color:#07101d;filter:brightness(1.1)}
 main{max-width:1120px;margin:auto;padding:75px 24px 100px}
 .hero{text-align:center;margin-bottom:65px}
 .eyebrow{
-  color:var(--cyan);font-size:11px;letter-spacing:4px;
-  text-transform:uppercase;margin-bottom:22px;
+  color:var(--cyan);
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  margin-bottom:22px;
 }
 h1{font-size:clamp(38px,6vw,68px);letter-spacing:-2px;margin:0 0 20px}
 .hero p{color:var(--muted);font-size:15px;line-height:1.8}
 .section-title{font-size:22px;margin:0 0 25px}
 .plans{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
 }
 .plan{
   background:linear-gradient(145deg,rgba(24,34,49,.96),rgba(13,19,29,.96));
-  border:1px solid var(--line);border-radius:15px;padding:28px;
-  position:relative;overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:28px;
+  position:relative;
+  overflow:hidden;
 }
 .plan.featured{border-color:rgba(108,156,255,.65)}
 .plan-tag{
-  color:var(--cyan);font-size:10px;letter-spacing:2px;
+  color:var(--cyan);
+  font-size:10px;
+  letter-spacing:2px;
   margin-bottom:20px;
 }
 .plan h3{font-size:21px;margin:0 0 12px}
@@ -74,67 +98,151 @@ h1{font-size:clamp(38px,6vw,68px);letter-spacing:-2px;margin:0 0 20px}
 .plan p{font-size:13px;color:var(--muted);line-height:1.7;min-height:42px}
 .plan button{width:100%;margin-top:20px}
 .account{
-  margin-top:65px;padding:30px;border:1px solid var(--line);
-  border-radius:15px;background:rgba(17,23,34,.8);
+  margin-top:65px;
+  padding:30px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:rgba(17,23,34,.8);
 }
 .account-head{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:15px;flex-wrap:wrap;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  flex-wrap:wrap;
 }
 .account h2{font-size:21px;margin:0 0 8px}
 .account-sub{color:var(--muted);font-size:13px}
 .account-content{
-  margin-top:25px;padding-top:22px;border-top:1px solid var(--line);
+  margin-top:25px;
+  padding-top:22px;
+  border-top:1px solid var(--line);
 }
 .account-email{font-size:15px;margin-bottom:12px}
 .account-note{color:var(--muted);font-size:13px;line-height:1.8}
 .features{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:18px;margin-top:25px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:25px;
 }
 .feature{
-  border:1px solid var(--line);border-radius:12px;
-  padding:22px;background:rgba(17,23,34,.55);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:22px;
+  background:rgba(17,23,34,.55);
 }
 .feature strong{display:block;margin-bottom:10px;font-size:14px}
 .feature span{font-size:12px;color:var(--muted);line-height:1.7}
 footer{
-  text-align:center;padding:30px;color:#647084;
-  font-size:11px;border-top:1px solid var(--line);
+  text-align:center;
+  padding:30px;
+  color:#647084;
+  font-size:11px;
+  border-top:1px solid var(--line);
   letter-spacing:1px;
 }
 .modal{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
-  z-index:10;align-items:center;justify-content:center;padding:20px;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  z-index:10;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
 .modal.show{display:flex}
 .modal-box{
-  width:100%;max-width:420px;background:#111925;
-  border:1px solid var(--line);border-radius:16px;padding:30px;
+  width:100%;
+  max-width:420px;
+  background:#111925;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:30px;
   box-shadow:0 25px 90px rgba(0,0,0,.5);
 }
 .modal-top{display:flex;justify-content:space-between;align-items:center}
 .modal h2{font-size:22px;margin:0}
 .close{
-  border:0;background:transparent;color:var(--muted);
-  font-size:25px;cursor:pointer;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-size:25px;
+  cursor:pointer;
 }
 .tabs{display:flex;gap:10px;margin:25px 0}
 .tab{
-  flex:1;padding:11px;border:1px solid var(--line);
-  background:transparent;color:var(--muted);border-radius:7px;
+  flex:1;
+  padding:11px;
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--muted);
+  border-radius:7px;
 }
-.tab.active{color:var(--text);border-color:var(--blue);background:rgba(108,156,255,.1)}
+.tab.active{
+  color:var(--text);
+  border-color:var(--blue);
+  background:rgba(108,156,255,.1);
+}
 .field{margin-bottom:17px}
-.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}
+.field label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:8px;
+}
 .field input{
-  width:100%;padding:13px;border:1px solid var(--line);
-  background:#0b111b;color:var(--text);border-radius:7px;outline:none;
+  width:100%;
+  padding:13px;
+  border:1px solid var(--line);
+  background:#0b111b;
+  color:var(--text);
+  border-radius:7px;
+  outline:none;
 }
 .field input:focus{border-color:var(--blue)}
 .modal-submit{width:100%;margin-top:8px}
-.message{font-size:12px;line-height:1.6;margin-top:15px;min-height:18px;color:var(--cyan)}
+.message{
+  font-size:12px;
+  line-height:1.6;
+  margin-top:15px;
+  min-height:18px;
+  color:var(--cyan);
+}
 .hidden{display:none!important}
+
+.orders{
+  margin-top:25px;
+}
+.orders h3{font-size:16px;margin-bottom:15px}
+.order-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  padding:17px;
+  margin-bottom:10px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:rgba(255,255,255,.02);
+}
+.order-name{font-size:14px;font-weight:600}
+.order-meta{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.7}
+.order-status{
+  font-size:11px;
+  padding:6px 10px;
+  border-radius:20px;
+  background:rgba(108,156,255,.12);
+  color:var(--blue);
+}
+.order-status.paid{
+  background:rgba(101,224,223,.12);
+  color:var(--cyan);
+}
+.empty-orders{color:var(--muted);font-size:13px;line-height:1.8}
+.loading{color:var(--muted);font-size:13px}
 @media(max-width:720px){
   nav{padding:0 20px}
   main{padding:55px 18px 70px}
@@ -144,6 +252,7 @@ footer{
 }
 </style>
 </head>
+
 <body>
 
 <nav>
@@ -156,6 +265,7 @@ footer{
 </nav>
 
 <main>
+
   <section class="hero">
     <div class="eyebrow">YOUR DIGITAL MEMBERSHIP</div>
     <h1>Access Beyond Limits.</h1>
@@ -167,7 +277,9 @@ footer{
 
   <section>
     <h2 class="section-title">Membership Plans</h2>
+
     <div class="plans">
+
       <article class="plan">
         <div class="plan-tag">01 / FLEXIBLE</div>
         <h3>Monthly</h3>
@@ -191,16 +303,21 @@ footer{
         <p>Long-term membership with extended access.</p>
         <button class="btn" onclick="choosePlan('yearly')">Select Plan</button>
       </article>
+
     </div>
   </section>
 
   <section class="account">
+
     <div class="account-head">
       <div>
         <h2>Account Center</h2>
         <div class="account-sub">Manage your account and membership status.</div>
       </div>
-      <button class="btn btn-primary" id="accountLogin" onclick="openModal('login')">Sign In / Register</button>
+
+      <button class="btn btn-primary" id="accountLogin" onclick="openModal('login')">
+        Sign In / Register
+      </button>
     </div>
 
     <div class="account-content" id="guestContent">
@@ -211,12 +328,27 @@ footer{
     </div>
 
     <div class="account-content hidden" id="userContent">
+
       <div class="account-email" id="userEmail"></div>
+
       <div class="account-note">
-        Account authentication: <span style="color:var(--cyan)">Verified</span><br>
-        Membership status: Not activated<br>
+        Account authentication:
+        <span style="color:var(--cyan)">Verified</span><br>
+        Membership status:
+        <span id="membershipStatus">Not activated</span><br>
         Your account is connected to the cloud database.
       </div>
+
+      <div class="orders">
+        <h3>My Orders</h3>
+        <div id="ordersList">
+          <div class="loading">Loading orders...</div>
+        </div>
+        <button class="btn" onclick="loadOrders()" style="margin-top:12px">
+          Refresh Orders
+        </button>
+      </div>
+
     </div>
   </section>
 
@@ -234,12 +366,16 @@ footer{
       <span>Sign in and manage your account from this portal.</span>
     </div>
   </section>
+
 </main>
 
-<footer>DIGITAL PORTAL · MEMBERSHIP MANAGEMENT SYSTEM</footer>
+<footer>
+  DIGITAL PORTAL · MEMBERSHIP MANAGEMENT SYSTEM
+</footer>
 
 <div class="modal" id="authModal">
   <div class="modal-box">
+
     <div class="modal-top">
       <h2 id="modalTitle">Welcome Back</h2>
       <button class="close" onclick="closeModal()">×</button>
@@ -251,29 +387,70 @@ footer{
     </div>
 
     <form id="authForm">
+
       <div class="field">
         <label>Email Address</label>
-        <input id="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+        <input
+          id="email"
+          type="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        >
       </div>
+
       <div class="field">
         <label>Password</label>
-        <input id="password" type="password" placeholder="At least 8 characters" minlength="8" autocomplete="current-password" required>
+        <input
+          id="password"
+          type="password"
+          placeholder="At least 8 characters"
+          minlength="8"
+          autocomplete="current-password"
+          required
+        >
       </div>
-      <button class="btn btn-primary modal-submit" id="submitButton" type="submit">Sign In</button>
+
+      <button class="btn btn-primary modal-submit" id="submitButton" type="submit">
+        Sign In
+      </button>
+
       <div class="message" id="authMessage"></div>
+
     </form>
   </div>
 </div>
 
 <script>
+"use strict";
+
+// =====================================
+// API CONFIGURATION
+// =====================================
+
 const API_BASE = "https://membership-api-demo.carlo202509.workers.dev";
+
+const TOKEN_KEY = "portal_token";
 
 let currentMode = "login";
 let currentUser = null;
+let isCreatingOrder = false;
+
+// =====================================
+// TOKEN MANAGEMENT
+// =====================================
 
 function getToken() {
-  return sessionStorage.getItem("portal_token");
+  return sessionStorage.getItem(TOKEN_KEY);
 }
+
+function clearToken() {
+  sessionStorage.removeItem(TOKEN_KEY);
+}
+
+// =====================================
+// MESSAGE
+// =====================================
 
 function setMessage(message, isError = false) {
   const el = document.getElementById("authMessage");
@@ -281,14 +458,22 @@ function setMessage(message, isError = false) {
   el.style.color = isError ? "#ff8585" : "#65e0df";
 }
 
+// =====================================
+// API REQUEST
+// =====================================
+
 async function apiRequest(path, options = {}) {
+
   const headers = {
     "Content-Type": "application/json",
     ...(options.headers || {})
   };
 
   const token = getToken();
-  if (token) headers.Authorization = "Bearer " + token;
+
+  if (token) {
+    headers.Authorization = "Bearer " + token;
+  }
 
   const response = await fetch(API_BASE + path, {
     ...options,
@@ -296,7 +481,9 @@ async function apiRequest(path, options = {}) {
   });
 
   const raw = await response.text();
+
   let data = {};
+
   try {
     data = raw ? JSON.parse(raw) : {};
   } catch {
@@ -304,11 +491,19 @@ async function apiRequest(path, options = {}) {
   }
 
   if (!response.ok) {
-    throw new Error(data.message || data.error || "Request failed (" + response.status + ")");
+    throw new Error(
+      data.message ||
+      data.error ||
+      "Request failed (" + response.status + ")"
+    );
   }
 
   return data;
 }
+
+// =====================================
+// AUTH MODAL
+// =====================================
 
 function openModal(mode = "login") {
   document.getElementById("authModal").classList.add("show");
@@ -321,18 +516,32 @@ function closeModal() {
 }
 
 function switchTab(mode) {
+
   currentMode = mode;
+
   const isLogin = mode === "login";
 
   document.getElementById("loginTab").classList.toggle("active", isLogin);
   document.getElementById("registerTab").classList.toggle("active", !isLogin);
-  document.getElementById("modalTitle").textContent = isLogin ? "Welcome Back" : "Create Account";
-  document.getElementById("submitButton").textContent = isLogin ? "Sign In" : "Create Account";
-  document.getElementById("password").autocomplete = isLogin ? "current-password" : "new-password";
+
+  document.getElementById("modalTitle").textContent =
+    isLogin ? "Welcome Back" : "Create Account";
+
+  document.getElementById("submitButton").textContent =
+    isLogin ? "Sign In" : "Create Account";
+
+  document.getElementById("password").autocomplete =
+    isLogin ? "current-password" : "new-password";
+
   setMessage("");
 }
 
+// =====================================
+// REGISTER / LOGIN
+// =====================================
+
 async function submitAuth(event) {
+
   event.preventDefault();
 
   const email = document.getElementById("email").value.trim().toLowerCase();
@@ -346,35 +555,67 @@ async function submitAuth(event) {
 
   button.disabled = true;
   button.textContent = "Please wait...";
+
   setMessage("");
 
   try {
-    const endpoint = currentMode === "register" ? "/api/register" : "/api/login";
+
+    const endpoint =
+      currentMode === "register"
+        ? "/api/register"
+        : "/api/login";
 
     const data = await apiRequest(endpoint, {
       method: "POST",
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({
+        email,
+        password
+      })
     });
 
-    if (!data.token) throw new Error("The server did not return a login token.");
+    if (!data.token) {
+      throw new Error("The server did not return a login token.");
+    }
 
-    sessionStorage.setItem("portal_token", data.token);
+    sessionStorage.setItem(TOKEN_KEY, data.token);
+
     currentUser = data.user || { email };
+
     updateAccountUI();
+
     closeModal();
 
     document.getElementById("authForm").reset();
-    alert(currentMode === "register" ? "Account created successfully!" : "Welcome back!");
+
+    await loadOrders();
+
+    alert(
+      currentMode === "register"
+        ? "Account created successfully!"
+        : "Welcome back!"
+    );
 
   } catch (error) {
+
     setMessage(error.message || "Something went wrong.", true);
+
   } finally {
+
     button.disabled = false;
-    button.textContent = currentMode === "login" ? "Sign In" : "Create Account";
+
+    button.textContent =
+      currentMode === "login"
+        ? "Sign In"
+        : "Create Account";
   }
 }
 
+// =====================================
+// ACCOUNT UI
+// =====================================
+
 function updateAccountUI() {
+
   const signedIn = !!currentUser;
 
   document.getElementById("navStatus").textContent =
@@ -382,77 +623,303 @@ function updateAccountUI() {
 
   document.getElementById("navLogin").classList.toggle("hidden", signedIn);
   document.getElementById("navLogout").classList.toggle("hidden", !signedIn);
+
   document.getElementById("accountLogin").classList.toggle("hidden", signedIn);
   document.getElementById("guestContent").classList.toggle("hidden", signedIn);
   document.getElementById("userContent").classList.toggle("hidden", !signedIn);
 
   if (signedIn) {
+
     document.getElementById("userEmail").textContent =
-      "Signed in as: " + currentUser.email;
+      "Signed in as: " + (currentUser.email || "User");
+
+  } else {
+
+    document.getElementById("ordersList").innerHTML = "";
   }
 }
 
+// =====================================
+// SESSION CHECK
+// =====================================
+
 async function checkSession() {
+
   const token = getToken();
 
   if (!token) {
+
     currentUser = null;
     updateAccountUI();
+
     return;
   }
 
   try {
-    const data = await apiRequest("/api/me", { method: "GET" });
+
+    const data = await apiRequest("/api/me", {
+      method: "GET"
+    });
+
     currentUser = data.user || data;
+
     updateAccountUI();
+
+    await loadOrders();
+
   } catch (error) {
-    sessionStorage.removeItem("portal_token");
+
+    clearToken();
+
     currentUser = null;
+
     updateAccountUI();
+
   }
 }
+
+// =====================================
+// LOGOUT
+// =====================================
 
 async function logout() {
+
   try {
+
     if (getToken()) {
-      await apiRequest("/api/logout", { method: "POST" });
+      await apiRequest("/api/logout", {
+        method: "POST"
+      });
     }
+
   } catch (error) {
+
     console.warn("Logout request failed:", error.message);
+
   } finally {
-    sessionStorage.removeItem("portal_token");
+
+    clearToken();
+
     currentUser = null;
+
     updateAccountUI();
   }
 }
 
+// =====================================
+// LOAD PLANS
+// =====================================
+
 async function loadPlans() {
+
   try {
-    const data = await apiRequest("/api/plans", { method: "GET" });
+
+    const data = await apiRequest("/api/plans", {
+      method: "GET"
+    });
+
     console.log("Cloud plans loaded:", data.plans || []);
+
   } catch (error) {
+
     console.warn("Could not load plans:", error.message);
+
   }
 }
 
-function choosePlan(planId) {
+// =====================================
+// CREATE ORDER
+// =====================================
+
+async function choosePlan(planId) {
+
   if (!currentUser) {
+
     openModal("login");
+
     setMessage("Please sign in before selecting a membership plan.");
+
     return;
   }
 
-  alert("You selected: " + planId + ". The demo order system will be connected in the next development step.");
+  if (isCreatingOrder) return;
+
+  const validPlans = ["monthly", "quarterly", "yearly"];
+
+  if (!validPlans.includes(planId)) {
+    alert("Invalid membership plan.");
+    return;
+  }
+
+  isCreatingOrder = true;
+
+  const buttons = document.querySelectorAll(".plan button");
+
+  buttons.forEach(button => {
+    button.disabled = true;
+    button.textContent = "Creating order...";
+  });
+
+  try {
+
+    const data = await apiRequest("/api/orders", {
+      method: "POST",
+      body: JSON.stringify({
+        plan_id: planId
+      })
+    });
+
+    const order = data.order;
+
+    if (!order || !order.id) {
+      throw new Error("The server did not return an order ID.");
+    }
+
+    await loadOrders();
+
+    alert(
+      "Order created successfully!\n\n" +
+      "Order ID: " + order.id + "\n" +
+      "Plan: " + planId + "\n" +
+      "Status: " + (order.status || "pending") +
+      "\n\nPayment is not connected yet."
+    );
+
+  } catch (error) {
+
+    alert("Order creation failed:\n" + error.message);
+
+  } finally {
+
+    isCreatingOrder = false;
+
+    buttons.forEach(button => {
+      button.disabled = false;
+      button.textContent = "Select Plan";
+    });
+  }
 }
 
-document.getElementById("authForm").addEventListener("submit", submitAuth);
+// =====================================
+// LOAD PERSONAL ORDERS
+// =====================================
 
-document.getElementById("authModal").addEventListener("click", function(event) {
-  if (event.target === this) closeModal();
-});
+async function loadOrders() {
+
+  if (!currentUser) return;
+
+  const container = document.getElementById("ordersList");
+
+  container.innerHTML =
+    '<div class="loading">Loading orders...</div>';
+
+  try {
+
+    const data = await apiRequest("/api/orders", {
+      method: "GET"
+    });
+
+    const orders = data.orders || [];
+
+    if (!orders.length) {
+
+      container.innerHTML =
+        '<div class="empty-orders">No orders yet. Choose a membership plan to create your first order.</div>';
+
+      return;
+    }
+
+    container.innerHTML = "";
+
+    orders.forEach(order => {
+
+      const item = document.createElement("div");
+
+      item.className = "order-item";
+
+      const left = document.createElement("div");
+
+      const name = document.createElement("div");
+      name.className = "order-name";
+      name.textContent = order.plan_name || order.plan_id || "Membership";
+
+      const meta = document.createElement("div");
+      meta.className = "order-meta";
+
+      meta.textContent =
+        "Order ID: " + order.id +
+        "\nDuration: " + (order.duration_days || "—") + " days" +
+        "\nAmount: " + ((Number(order.amount_cents || 0) / 100).toFixed(2)) +
+        "\nCreated: " + (order.created_at || "—");
+
+      const right = document.createElement("span");
+
+      right.className =
+        "order-status" +
+        (order.status === "paid" ? " paid" : "");
+
+      right.textContent = order.status || "pending";
+
+      left.appendChild(name);
+      left.appendChild(meta);
+
+      item.appendChild(left);
+      item.appendChild(right);
+
+      container.appendChild(item);
+    });
+
+  } catch (error) {
+
+    container.innerHTML =
+      '<div class="empty-orders">Could not load orders: ' +
+      escapeHTML(error.message) +
+      '</div>';
+
+  }
+}
+
+// =====================================
+// HTML ESCAPE
+// =====================================
+
+function escapeHTML(value) {
+
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+// =====================================
+// EVENT LISTENERS
+// =====================================
+
+document
+  .getElementById("authForm")
+  .addEventListener("submit", submitAuth);
+
+document
+  .getElementById("authModal")
+  .addEventListener("click", function(event) {
+
+    if (event.target === this) {
+      closeModal();
+    }
+
+  });
+
+// =====================================
+// INITIALIZE
+// =====================================
 
 checkSession();
 loadPlans();
+
 </script>
+
 </body>
 </html>
